@@ -1,12 +1,16 @@
-all_zero_row_index <- function(x){
+all_zero_row_index <- function(x, eps){
   which(abs(rowSums(x)) < eps)
 }
 
-#' @param a
-#' @param l
-#' @param eps
+#' Compute a sketch matrix of input matrix
+#'
+#' Compute a sketch matrix of input matrix
+#'
+#' @param a Original matrix to be sketched (n x m)
+#' @param l The number of rows in sketched matrix (l x m)
+#' @param eps If a value is smaller than eps, that is considered as equal to zero. The default value is 10^(-8)
 #' @export
-sketching <- function(a, l, eps){
+sketching <- function(a, l, eps=10^(-8)){
   m <- ncol(a)
   n <- nrow(a)
   # Input error handling
@@ -14,7 +18,7 @@ sketching <- function(a, l, eps){
   if(l >= n){stop("l must not be greater than n")}
 
   b <- matrix(0, nrow = l, ncol = m)
-  zero_row_index <- all_zero_row_index(b)
+  zero_row_index <- all_zero_row_index(b, eps)
   for(i in seq_len(l)){
     # Fill first all zero row by a[i,]
     b[zero_row_index[1], ] <- a[i, ]
@@ -28,15 +32,18 @@ sketching <- function(a, l, eps){
       sigma_tilde <- sqrt(pmax(sigma^2 - delta, 0))
       b <- diag(sigma_tilde) %*% t(v)
       # Update zero lists
-      zero_row_index <- all_zero_row_index(b)
+      zero_row_index <- all_zero_row_index(b, eps)
     }
   }
   b
 }
-
-#' @param data
-#' @param label
-#' @param x
+#' Plot data
+#'
+#' Plot data
+#'
+#' @param data x
+#' @param label y
+#' @param x skeched matrix
 #' @export
 plot_svd <- function(data, label, x = data){
   v <- svd(x)$v
@@ -47,5 +54,3 @@ plot_svd <- function(data, label, x = data){
   x_p <- data %*% v[,1:2]
   plot(x_p[,1], x_p[,2], col=label, pch=16)
 }
-
-# https://www.kaggle.com/bistaumanga/usps-dataset/version/1
