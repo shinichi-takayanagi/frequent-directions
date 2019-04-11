@@ -8,7 +8,9 @@ plot_svd(a, label = NULL, b = a)
 }
 \arguments{
 \item{a}{Original matrix to be sketched (n x m)}
+
 \item{label}{Group index for each a's row. These values are used for group and color.}
+
 \item{b}{A sketched matrix (l x m)}
 }
 \description{
