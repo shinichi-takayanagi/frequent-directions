@@ -20,11 +20,11 @@ Implementation of Frequent-Directions algorithm for efficient matrix sketching [
 ## Installation
 
 ```{r gh-installation, eval = FALSE}
-# Not yet from CRAN
-# install.packages("frequentdirections")
+# Not yet onCRAN
+install.packages("frequentdirections")
 
 # Or the development version from GitHub:
-# install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("shinichi-takayanagi/frequentdirections")
 ```
 
@@ -33,7 +33,7 @@ devtools::install_github("shinichi-takayanagi/frequentdirections")
 ### Download example data
 
 Here, we use [Handwritten digits USPS dataset](https://www.kaggle.com/bistaumanga/usps-dataset/version/1) as sample data.
-In the following example, we assume that you save the above sample data into `your home` directory (`~`).
+In the following example, we assume that you save the above sample data into `/tmp` directory.
 
 ### Load data
 
@@ -41,20 +41,20 @@ The dataset has 7291 train and 2007 test images in `h5` format.
 The images are 16*16 grayscale pixels.
 ```{r load-data}
 library("h5")
-file <- h5file("~/usps.h5")
+file <- h5file("/tmp/usps.h5")
 x <- file["train/data"][]
 y <- file["train/target"][]
 str(x)
 ```
 
 ### Plot example image
-Example 8
+Example the number `8`
 ```{r plot-example-image}
 image(matrix(x[338,], nrow=16, byrow = FALSE))
 ```
 
 ### Plot SVD
-
+Plot the original data on the first and second singular vector plane.
 ```{r plot-svd}
 x <- scale(x)
 frequentdirections::plot_svd(x, y)
@@ -62,7 +62,7 @@ frequentdirections::plot_svd(x, y)
 
 ### Matrix Sketching
 #### l = 8 case
-```{r}
+```{r frequentdirections-8}
 eps <- 10^(-8)
 # 7291 x 256 -> 8 * 256 matrix
 b <- frequentdirections::sketching(x, 8, eps)
@@ -70,15 +70,19 @@ frequentdirections::plot_svd(x, y, b)
 ```
 
 #### l = 32 case
-```{r}
+```{r frequentdirections-32}
 # 7291 x 256 -> 32 * 256 matrix
 b <- frequentdirections::sketching(x, 32, eps)
 frequentdirections::plot_svd(x, y, b)
 ```
 
 #### l = 128 case
-```{r sketching-128}
+```{r frequentdirections-128}
 # 7291 x 256 -> 128 * 256 matrix
 b <- frequentdirections::sketching(x, 128, eps)
 frequentdirections::plot_svd(x, y, b)
 ```
+
+This result is almost the same with the original data SVD expression.
+
+That's why we can think that the original data is expressed with only `128` rows.
