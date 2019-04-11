@@ -37,9 +37,9 @@ sketching <- function(a, l, eps=10^(-8)){
   }
   b
 }
-#' Plot data
+#' Plot data using the first and second singular vector
 #'
-#' Plot data
+#' Plot data using the first and second singular vector
 #'
 #' @param data x
 #' @param label y
@@ -52,5 +52,8 @@ plot_svd <- function(data, label, x = data){
   if(sum(v[,2]) <= 0){v[,2] <- -v[,2]}
   # Projection matrix(x_p = XV = UΣ) and plot
   x_p <- data %*% v[,1:2]
-  plot(x_p[,1], x_p[,2], col=label, pch=16)
+  df <- data.frame(x = x_p[,1], y = x_p[,2], label=as.character(label))
+  ggplot2::ggplot(df, ggplot2::aes(x=x, y=y, group=label, color=label)) +
+    ggplot2::geom_point() +
+    ggplot2::labs(x = "The first singular vector", y = "The second singular vector")
 }

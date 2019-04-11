@@ -33,7 +33,7 @@ devtools::install_github("shinichi-takayanagi/frequentdirections")
 ### Download example data
 
 Here, we use [Handwritten digits USPS dataset](https://www.kaggle.com/bistaumanga/usps-dataset/version/1) as sample data.
-In the following example, we assume that you save the above sample data into `temp` directory.
+In the following example, we assume that you save the above sample data into `your home` directory (`~`).
 
 ### Load data
 
@@ -41,7 +41,7 @@ The dataset has 7291 train and 2007 test images in `h5` format.
 The images are 16*16 grayscale pixels.
 ```{r load-data}
 library("h5")
-file <- h5file("C:\\temp\\usps.h5")
+file <- h5file("~/usps.h5")
 x <- file["train/data"][]
 y <- file["train/target"][]
 str(x)
