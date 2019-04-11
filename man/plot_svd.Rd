@@ -2,17 +2,15 @@
 % Please edit documentation in R/frequentdirections.R
 \name{plot_svd}
 \alias{plot_svd}
-\title{Plot data}
+\title{Plot data using the first and second singular vector}
 \usage{
-plot_svd(data, label, x = data)
+plot_svd(a, label = NULL, b = a)
 }
 \arguments{
-\item{data}{x}
+\item{a}{Original matrix to be sketched (n x m)}
 
-\item{label}{y}
-
-\item{x}{skeched matrix}
+\item{b}{A sketched matrix (l x m)}
 }
 \description{
-Plot data
+Plot data using the first and second singular vector
 }
