@@ -42,7 +42,7 @@ sketching <- function(a, l, eps=10^(-8)){
 #' Plot data using the first and second singular vector
 #'
 #' @param a Original matrix to be sketched (n x m)
-#' @param label
+#' @param label Group index for each a's row. These values are used for group and color.
 #' @param b A sketched matrix (l x m)
 #' @export
 plot_svd <- function(a, label = NULL, b = a){
