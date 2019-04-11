@@ -41,19 +41,24 @@ sketching <- function(a, l, eps=10^(-8)){
 #'
 #' Plot data using the first and second singular vector
 #'
-#' @param data x
-#' @param label y
-#' @param x skeched matrix
+#' @param a Original matrix to be sketched (n x m)
+#' @param label
+#' @param b A sketched matrix (l x m)
 #' @export
-plot_svd <- function(data, label, x = data){
-  v <- svd(x)$v
+plot_svd <- function(a, label = NULL, b = a){
+  v <- svd(b)$v
   # Not cool code...
   if(sum(v[,1]) <= 0){v[,1] <- -v[,1]}
   if(sum(v[,2]) <= 0){v[,2] <- -v[,2]}
   # Projection matrix(x_p = XV = UΣ) and plot
-  x_p <- data %*% v[,1:2]
-  df <- data.frame(x = x_p[,1], y = x_p[,2], label=as.character(label))
-  ggplot2::ggplot(df, ggplot2::aes(x=x, y=y, group=label, color=label)) +
-    ggplot2::geom_point() +
+  x <- a %*% v[,1:2]
+  df <- data.frame(x = x[,1], y = x[,2])
+  ggobj <- ggplot2::ggplot(df, ggplot2::aes(x=x, y=y)) +
     ggplot2::labs(x = "The first singular vector", y = "The second singular vector")
+  ggobj + if(!is.null(label)){
+    label <- as.character(label)
+    ggplot2::geom_point(ggplot2::aes(group=label, color=label))
+  } else{
+    ggplot2::geom_point()
+  }
 }
