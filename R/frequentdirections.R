@@ -23,7 +23,7 @@ sketching <- function(a, l, eps=10^(-8)){
     # Fill first all zero row by a[i,]
     b[zero_row_index[1], ] <- a[i, ]
     #Remove first element because we already used it
-    zero_row_index <- tail(zero_row_index, -1)
+    zero_row_index <- utils::tail(zero_row_index, -1)
     if(length(zero_row_index) == 0){
       b_svd <- svd(b)
       v <- b_svd$v
