@@ -1,0 +1,83 @@
+---
+title: "Introduction to frequentdirections"
+author: "Shinichi Takayanagi"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to frequentdirections}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache=TRUE,
+  fig.height=6,
+  fig.width=8
+)
+```
+
+### Download example data
+
+Here, we use [MNIST package](https://github.com/stillmatic/MNIST) developped by  [\@stillmatic](https://github.com/stillmatic) as sample data.
+
+You can install this package like the following:
+```{r, eval=FALSE}
+devtools::install_github("stillmatic/MNIST")
+```
+
+### Load data
+
+Once you install `stillmatic/MNIST`, MNIST data is exported as `MNIST::mnist_train`.
+
+Example the number `8`
+```{r plot-example-image}
+MNIST::show_digit(MNIST::mnist_train[770,])
+```
+
+### Sampling
+
+There are 60,000 records in the data, it is little bit too much data for usual SVD (for usual PC).
+
+That's why we would like to do sampling here.
+
+```{r}
+df <- MNIST::mnist_train[sample(seq_len(nrow(MNIST::mnist_train)), size=10^4), ]
+```
+
+### Plot SVD
+Plot the original data on the first and second singular vector plane.
+```{r plot-svd}
+x <- as.matrix(dplyr::select(df, -y))/255
+y <- df$y
+frequentdirections::plot_svd(x, y)
+```
+
+### Matrix Sketching
+#### l = 8 case
+```{r frequentdirections-8}
+eps <- 10^(-8)
+# 10000 x 256 -> 8 * 256 matrix
+b <- frequentdirections::sketching(x, 8, eps)
+frequentdirections::plot_svd(x, y, b)
+```
+
+#### l = 32 case
+```{r frequentdirections-32}
+# 10000 x 256 -> 32 * 256 matrix
+b <- frequentdirections::sketching(x, 32, eps)
+frequentdirections::plot_svd(x, y, b)
+```
+
+#### l = 128 case
+```{r frequentdirections-128}
+# 10000 x 256 -> 128 * 256 matrix
+b <- frequentdirections::sketching(x, 128, eps)
+frequentdirections::plot_svd(x, y, b)
+```
+
+This result is almost the same with the original data SVD expression.
+
+That's why we can think that the original data is expressed with only `128` rows.

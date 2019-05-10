@@ -30,59 +30,23 @@ devtools::install_github("shinichi-takayanagi/frequentdirections")
 
 ## Example
 
-### Download example data
-
-Here, we use [Handwritten digits USPS dataset](https://www.kaggle.com/bistaumanga/usps-dataset/version/1) as sample data.
-In the following example, we assume that you save the above sample data into `/tmp` directory.
-
-### Load data
-
-The dataset has 7291 train and 2007 test images in `h5` format. 
-The images are 16*16 grayscale pixels.
-```{r load-data}
-library("h5")
-file <- h5file("/tmp/usps.h5")
-x <- file["train/data"][]
-y <- file["train/target"][]
-str(x)
-```
-
-### Plot example image
-Example the number `8`
-```{r plot-example-image}
-image(matrix(x[338,], nrow=16, byrow = FALSE))
-```
-
-### Plot SVD
-Plot the original data on the first and second singular vector plane.
-```{r plot-svd}
+```{r example}
+# (Meaningless) dummy data
+size_col <- 50
+size_row <- 10^3
+x <- matrix(
+  c(rnorm(size_row * size_col), rnorm(size_row * size_col, mean=1)),
+  ncol = size_col, byrow = TRUE
+)
 x <- scale(x)
+y <- rep(1:2, each=size_row)
+# Show 2D plot using SVD
 frequentdirections::plot_svd(x, y)
-```
-
-### Matrix Sketching
-#### l = 8 case
-```{r frequentdirections-8}
-eps <- 10^(-8)
-# 7291 x 256 -> 8 * 256 matrix
-b <- frequentdirections::sketching(x, 8, eps)
+# Matrix Skethinc(l=6)
+b <- frequentdirections::sketching(x, 6, 10^(-8))
+# Show 2D plot using sketched matrix and show similar result with the above
+# That means that 6 dim is enough to express the original data matrix (x)
 frequentdirections::plot_svd(x, y, b)
 ```
 
-#### l = 32 case
-```{r frequentdirections-32}
-# 7291 x 256 -> 32 * 256 matrix
-b <- frequentdirections::sketching(x, 32, eps)
-frequentdirections::plot_svd(x, y, b)
-```
-
-#### l = 128 case
-```{r frequentdirections-128}
-# 7291 x 256 -> 128 * 256 matrix
-b <- frequentdirections::sketching(x, 128, eps)
-frequentdirections::plot_svd(x, y, b)
-```
-
-This result is almost the same with the original data SVD expression.
-
-That's why we can think that the original data is expressed with only `128` rows.
+For more details using real world data, See [vignette](https://cran.r-project.org/web/packages/frequentdirections/vignettes/introduction.html).

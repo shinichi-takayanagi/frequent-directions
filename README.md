@@ -1,15 +1,15 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+frequentdirections [![Build Status](https://travis-ci.com/shinichi-takayanagi/frequentdirections.svg?branch=master)](https://travis-ci.com/shinichi-takayanagi/frequentdirections)
+==================================================================================================================================================================================
 
-# frequentdirections [![Build Status](https://travis-ci.com/shinichi-takayanagi/frequentdirections.svg?branch=master)](https://travis-ci.com/shinichi-takayanagi/frequentdirections) [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/frequentdirections)](https://cran.r-project.org/package=frequentdirections)
+Implementation of Frequent-Directions algorithm for efficient matrix sketching \[E. Liberty, SIGKDD2013\]
 
-Implementation of Frequent-Directions algorithm for efficient matrix
-sketching \[E. Liberty, SIGKDD2013\]
-
-## Installation
+Installation
+------------
 
 ``` r
-# From CRAN
+# Not yet onCRAN
 install.packages("frequentdirections")
 
 # Or the development version from GitHub:
@@ -17,84 +17,33 @@ install.packages("devtools")
 devtools::install_github("shinichi-takayanagi/frequentdirections")
 ```
 
-## Example
-
-### Download example data
-
-Here, we use [Handwritten digits USPS
-dataset](https://www.kaggle.com/bistaumanga/usps-dataset/version/1) as
-sample data. In the following example, we assume that you save the above
-sample data into `/tmp` directory.
-
-### Load data
-
-The dataset has 7291 train and 2007 test images in `h5` format. The
-images are 16\*16 grayscale pixels.
+Example
+-------
 
 ``` r
-library("h5")
-file <- h5file("/tmp/usps.h5")
-x <- file["train/data"][]
-y <- file["train/target"][]
-str(x)
-#>  num [1:7291, 1:256] 0 0 0 0 0 0 0 0 0 0 ...
-```
-
-### Plot example image
-
-Example the number `8`
-
-``` r
-image(matrix(x[338,], nrow=16, byrow = FALSE))
-```
-
-![](man/figures/README-plot-example-image-1.png)<!-- -->
-
-### Plot SVD
-
-Plot the original data on the first and second singular vector plane.
-
-``` r
+# (Meaningless) dummy data
+size_col <- 50
+size_row <- 10^3
+x <- matrix(
+  c(rnorm(size_row * size_col), rnorm(size_row * size_col, mean=1)),
+  ncol = size_col, byrow = TRUE
+)
 x <- scale(x)
+y <- rep(1:2, each=size_row)
+# Show 2D plot using SVD
 frequentdirections::plot_svd(x, y)
 ```
 
-![](man/figures/README-plot-svd-1.png)<!-- -->
-
-### Matrix Sketching
-
-#### l = 8 case
+![](man/figures/README-example-1.png)
 
 ``` r
-eps <- 10^(-8)
-# 7291 x 256 -> 8 * 256 matrix
-b <- frequentdirections::sketching(x, 8, eps)
+# Matrix Skethinc(l=6)
+b <- frequentdirections::sketching(x, 6, 10^(-8))
+# Show 2D plot using sketched matrix and show similar result with the above
+# That means that 6 dim is enough to express the original data matrix (x)
 frequentdirections::plot_svd(x, y, b)
 ```
 
-![](man/figures/README-frequentdirections-8-1.png)<!-- -->
+![](man/figures/README-example-2.png)
 
-#### l = 32 case
-
-``` r
-# 7291 x 256 -> 32 * 256 matrix
-b <- frequentdirections::sketching(x, 32, eps)
-frequentdirections::plot_svd(x, y, b)
-```
-
-![](man/figures/README-frequentdirections-32-1.png)<!-- -->
-
-#### l = 128 case
-
-``` r
-# 7291 x 256 -> 128 * 256 matrix
-b <- frequentdirections::sketching(x, 128, eps)
-frequentdirections::plot_svd(x, y, b)
-```
-
-![](man/figures/README-frequentdirections-128-1.png)<!-- -->
-
-This result is almost the same with the original data SVD expression.
-
-That’s why we can think that the original data is expressed with only
-`128` rows.
+For more details using real world data, See [vignette](https://cran.r-project.org/web/packages/frequentdirections/vignettes/introduction.html).
