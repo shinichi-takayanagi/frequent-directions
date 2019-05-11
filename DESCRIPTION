@@ -12,12 +12,15 @@ URL: https://github.com/shinichi-takayanagi/frequentdirections
 BugReports: https://github.com/shinichi-takayanagi/frequentdirections/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
+Remotes: 
+  github::stillmatic/MNIST
 Imports:
   ggplot2,
 Suggests: 
   testthat,
   knitr,
-  rmarkdown
+  rmarkdown,
+  MNIST
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
