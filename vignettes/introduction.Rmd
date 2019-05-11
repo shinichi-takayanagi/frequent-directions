@@ -50,7 +50,8 @@ df <- MNIST::mnist_train[sample(seq_len(nrow(MNIST::mnist_train)), size=10^4), ]
 ### Plot SVD
 Plot the original data on the first and second singular vector plane.
 ```{r plot-svd}
-x <- as.matrix(dplyr::select(df, -y))/255
+# Last column is y column
+x <- as.matrix(df[, -ncol(df)])/255
 y <- df$y
 frequentdirections::plot_svd(x, y)
 ```
